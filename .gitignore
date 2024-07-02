@@ -1,0 +1,9 @@
+# executable files
+*.out
+*.exe
+
+# log files
+logger/
+
+# editor configuration
+.vscode
