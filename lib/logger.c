@@ -1,4 +1,4 @@
-#include "logger.h"
+#include "../headers/logger.h"
 
 void log_error(char* error) {
 

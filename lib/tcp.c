@@ -1,5 +1,5 @@
-#include "tcp.h"
-#include "./../lib/logger.h"
+#include "../headers/tcp.h"
+#include "../headers/logger.h"
 
 void initSocketForWindows() {
 	#if defined(_WIN32)
