@@ -38,10 +38,11 @@ void bind_socket(struct addrinfo *addr, SOCKET sd) {
 	handle_error(b, "fn: bind_socket failed. \n");
 }
 
-void listen_socket(char* PORT, void (*cb)(SOCKET sd)) {
+void listen_socket(char* host, char* PORT, void (*cb)(SOCKET sd)) {
 	struct addrinfo hints = make_address_hints();
 	struct addrinfo *bind_address = NULL;
-	getaddrinfo(NULL, PORT, &hints, &bind_address);
+	
+	getaddrinfo(host, PORT, &hints, &bind_address);
 	
 	printf("Make socket ...\n");
 	SOCKET sd = make_socket(bind_address);
