@@ -42,7 +42,7 @@
 
 	// Define data structures
 	struct Server {
-		void (*listen)(char* PORT, void (*cb)(SOCKET sd));
+		void (*listen)(char *host, char *PORT, void (*cb)(SOCKET sd));
 	};
 
 	extern const struct Server Server;
