@@ -1,5 +1,6 @@
 #include "../headers/tcp.h"
 #include "../headers/logger.h"
+#include "../headers/lib.h"
 
 void initSocketForWindows() {
 	#if defined(_WIN32)
@@ -84,8 +85,41 @@ void listen_socket(const char* host, const char* PORT, void (*cb)(SOCKET sd)) {
 	printf("Listennig to socket...\n");
 	handle_error((listen(sd, 10) < 0), "fn: listen failed. \n");
 
-	printf("Handle incoming requests...\n");
-	cb(sd);
+	fd_set master_set, read_set;
+	FD_ZERO(&master_set);
+	FD_SET(sd, &master_set);
+	int max_fd = sd;
+
+	while(1) {
+		read_set = master_set;
+		// int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
+
+		int activity = select(max_fd + 1, &read_set, NULL, NULL, NULL);
+		handle_error(activity == -1, "fn: select failed. \n");
+
+		//? Check for new connections
+		if(FD_ISSET(sd, &read_set)) {
+			printf("Accepting client socket...\n");
+			SOCKET cs = accept_socket(sd);
+			
+			//? fill the set with the new socket
+			FD_SET(cs, &master_set);
+
+			if(cs > max_fd)
+				max_fd = cs;
+		}
+
+		for(int i = 0; i <= max_fd; ++i) {
+			if(FD_ISSET(i, &read_set)) {
+				if(i != sd) {
+					printf("Handle incoming requests...\n");
+					clear_console();
+					cb(i);
+					FD_CLR(i, &master_set);
+				}
+			}
+		}
+	}
 
 	printf("Close socket and clean up...\n");
 	clean_socket(sd);
@@ -147,7 +181,23 @@ void connect_socket(const char *host, const char *port, void (*cb)(SOCKET sd)) {
 
 }
 
+void recv_data(const int sd, const void (*cb)(void *buffer)) {
+	char buffer[10000];
+	
+	int d = recv(sd, (void *)buffer, 10000, 0);
+	handle_error(d == -1, "fn: receive data failed.\n");
+
+	cb((void *)buffer);
+}
+
+void send_data(const int sd, void *buffer) {
+	int s = send(sd, buffer, 10000, 0);
+	handle_error(s == -1, "fn: send data failed.\n");
+}
+
 const struct Server Server = { 
 	.listen  = listen_socket,
-	.connect = connect_socket
+	.connect = connect_socket,
+	.send    = send_data,
+	.recv    = recv_data
 };
