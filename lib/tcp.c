@@ -1,6 +1,6 @@
 #include "../headers/tcp.h"
 #include "../headers/logger.h"
-#include "../headers/lib.h"
+#include "../headers/screen.h"
 
 void initSocketForWindows() {
 	#if defined(_WIN32)
