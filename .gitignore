@@ -2,6 +2,9 @@
 *.out
 *.exe
 
+# object files
+*.o
+
 # log files
 logger/
 
