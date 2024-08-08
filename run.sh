@@ -12,8 +12,8 @@ PROGRAM_TO_RUN="$1"
 
 if [ "$1" = "client" ]; then
 
-  # Compile client program and run it.
-  gcc lib/tcp.c lib/interfaces_Impl/host.c client/main.c -lm -o client.out
+  #Call make with 'client' variable, then run the program. 
+  make client
 
   if [ $? -eq 0 ]; then
     echo "Compilation client successful. Running the program... "
@@ -24,8 +24,8 @@ if [ "$1" = "client" ]; then
   
 elif [ "$1" = "server" ]; then
   
-  # Compile server program and run it.
-  gcc lib/tcp.c server.c -o server.out
+  #Call make with 'client' variable, then run the program.
+  make server && ./server.out
 
   if [ $? -eq 0 ]; then
     echo "Compilation server successful. Running the program... "
