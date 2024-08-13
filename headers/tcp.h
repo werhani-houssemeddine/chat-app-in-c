@@ -18,7 +18,6 @@
 		#include <arpa/inet.h>
 		#include <netdb.h>
 		#include <unistd.h>
-		#include <errno.h>
 	#endif
 
 	#include <stdio.h>
@@ -30,11 +29,9 @@
 	#if defined(_WIN32)
 		#define IS_VALID_SOCKET(s) ((s) != INVALID_SOCKET)
 		#define CLOSE_SOCKET(s) closesocket(s)
-		#define GET_SOCKET_ERRNO() (WSAGetLastError())
 	#else
 		#define IS_VALID_SOCKET(s) ((s) >= 0)
 		#define CLOSE_SOCKET(s) close(s)
-		#define GET_SOCKET_ERRNO() (errno)
 		#define SOCKET int
 	#endif
 
@@ -45,8 +42,6 @@
 	struct Server {
 		void (*listen)(const char *host, const char *PORT, void (*cb)(SOCKET sd));
 		void (*connect)(const char *host, const char *port, void (*cb)(SOCKET sd));
-		void (*recv)(const int sd, const void (*cb)(void *buffer));
-		void (*send)(const int sd, void *buffer);
 	};
 
 	extern const struct Server Server;
