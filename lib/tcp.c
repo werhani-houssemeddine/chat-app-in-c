@@ -1,6 +1,7 @@
 #include "../headers/tcp.h"
 #include "../headers/logger.h"
 #include "../headers/screen.h"
+#include "../headers/error.h"
 
 void initSocketForWindows() {
 	#if defined(_WIN32)
@@ -17,13 +18,6 @@ void clean_socket(SOCKET socket) {
 	#if defined(_WIN32)
 		WSACleanup();
 	#endif
-}
-
-void handle_error(int condition, char* error) {
-	if(condition) {
-		fprintf(stderr, "%sError code: %d\n", error, GET_SOCKET_ERRNO() );
-		exit(EXIT_FAILURE);
-	}
 }
 
 struct addrinfo make_address_hints() {
@@ -181,23 +175,7 @@ void connect_socket(const char *host, const char *port, void (*cb)(SOCKET sd)) {
 
 }
 
-void recv_data(const int sd, const void (*cb)(void *buffer)) {
-	char buffer[10000];
-	
-	int d = recv(sd, (void *)buffer, 10000, 0);
-	handle_error(d == -1, "fn: receive data failed.\n");
-
-	cb((void *)buffer);
-}
-
-void send_data(const int sd, void *buffer) {
-	int s = send(sd, buffer, 10000, 0);
-	handle_error(s == -1, "fn: send data failed.\n");
-}
-
 const struct Server Server = { 
 	.listen  = listen_socket,
-	.connect = connect_socket,
-	.send    = send_data,
-	.recv    = recv_data
+	.connect = connect_socket
 };
