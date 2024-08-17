@@ -18,6 +18,7 @@ client: \
 	lib/screen.o \
 	lib/interfaces_Impl/user.o \
 	lib/interfaces_Impl/host.o
+
 	gcc client/main.o lib/error.o lib/tcp.o lib/request.o lib/screen.o \
 			lib/interfaces_Impl/user.o lib/interfaces_Impl/host.o -lm -o client.out
 
@@ -26,8 +27,9 @@ server: \
 	server.o \
 	lib/error.o \
 	lib/tcp.o \
-	lib/request.o \
-	gcc lib/tcp.o lib/request.o server.o -o server.out
+	lib/request.o
+
+	gcc lib/tcp.o lib/error.o lib/request.o server.o -o server.out
 
 # Object files:
 lib/error.o: lib/error.c
