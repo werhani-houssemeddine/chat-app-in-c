@@ -6,3 +6,10 @@ void handle_error(int condition, char* error) {
 		exit(EXIT_FAILURE);
 	}
 }
+
+void handle_memory_allocation(void *ptr) {
+	if(ptr == NULL) {
+		printf("Error: failed allocation memory.\n");
+		exit(EXIT_FAILURE);
+	}
+}

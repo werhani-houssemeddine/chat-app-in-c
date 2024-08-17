@@ -25,5 +25,6 @@
   #include <stdlib.h>
 
   void handle_error(int condition, char* error);
+  void handle_memory_allocation(void *ptr);
 
 #endif
